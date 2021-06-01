@@ -27,9 +27,9 @@ displayName="Dragonseeker" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
+logoFile="" #optional
 # A text field displayed in the mod UI
-credits="Ice & Fire was written by " #optional
+credits="Ice & Fire was written by Alex" #optional
 # A text field displayed in the mod UI
 authors="Syric" #optional
 # The description text for the mod (multi line!) (#mandatory)
@@ -56,9 +56,9 @@ This mod adds tools with which to find dragons in the Ice & Fire mod.
     versionRange="[1.16.5,1.17)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.dragonseeker]]
-    modId="iceandfire"
-    mandatory=true
-    versionRange="[2.1.6,)"
-    ordering="AFTER"
-    side="BOTH"
+#[[dependencies.dragonseeker]]
+#    modId="iceandfire"
+#    mandatory=true
+#    versionRange="[2.1.6,)"
+#    ordering="AFTER"
+#    side="BOTH"
