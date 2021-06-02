@@ -60,5 +60,5 @@ This mod adds tools with which to find dragons in the Ice & Fire mod.
 #    modId="iceandfire"
 #    mandatory=true
 #    versionRange="[2.1.6,)"
-#    ordering="AFTER"
+#    ordering="NONE"
 #    side="BOTH"

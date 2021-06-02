@@ -12,9 +12,19 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.1'
-group = 'syric.dragonseeker.dragonseeker' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = '1.0'
+group = 'syric.dragonseeker' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'dragonseeker'
+
+repositories {
+    mavenLocal()
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8) // Mojang ships Java 8 to end users, so your mod should target Java 8.
 
@@ -118,6 +128,10 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.0'
+
+    compile fg.deobf("curse.maven:citadel-331936:3198842")
+//    compile fg.deobf("curse.maven:ice-and-fire-dragons-264231:3217622")
+    compile fg.deobf("curse.maven:wyrmroost-340333:3173775")
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
