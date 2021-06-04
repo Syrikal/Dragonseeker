@@ -1,94 +1,57 @@
 package syric.dragonseeker.item.tool;
 
-import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
+import com.github.alexthe666.iceandfire.entity.EntityFireDragon;
+import com.github.alexthe666.iceandfire.entity.EntityIceDragon;
+import com.github.alexthe666.iceandfire.entity.EntityLightningDragon;
 import net.minecraft.entity.EntityPredicate;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.ShulkerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class TestDragonseekerGeneric extends Item {
+public class OldEpicDragonseekerItem extends Item {
 
     //Defining statistics
-    //Ping chance stats
-    private int opDist;
-    private int maxDist;
-    private double minPing;
-    private double maxPing;
+    private int opDist = 125;
+    private int maxDist = 250;
+    private int minSig = 125;
 
-    //Ping characteristic stats
-    private int minSig;
-    private double pow;
-    private float minVol;
-    private float maxVol;
-    private float minPitch;
-    private float maxPitch;
-    private SoundEvent negSound;
-    private SoundEvent pingSound;
+    private double minPing = 0.1;
+    private double maxPing = 0.67;
+    private double minVol = 0.05;
+    private double maxVol = 0.3;
+//    private double minPitch;
+//    private double maxPitch;
 
-    //Other stats
-    private boolean detectsCorpses;
-    private boolean detectsTame;
-//    private int durability;
-//    private Rarity rarity;
-    private Item repairItem;
-    private int seekerType;
+    private boolean detectsCorpses = false;
+    private boolean detectsTame = true;
 
     //Constructor
-    public TestDragonseekerGeneric() {
+    public OldEpicDragonseekerItem() {
         super(new Properties()
                 .stacksTo(1)
-                .tab(IceAndFire.TAB_ITEMS)
+                .durability(500)
+                .tab(ItemGroup.TAB_TOOLS)
+                .rarity(Rarity.RARE)
         );
-    }
-
-//    public TestDragonseekerGeneric(int durability, Rarity rarity) {
-//        super(new Properties()
-//                .stacksTo(1)
-//                .tab(IceAndFire.TAB_ITEMS)
-//                .durability(durability)
-//                .rarity(rarity)
-//        );
-//    }
-
-    public TestDragonseekerGeneric(int opDistIn, int maxDistIn, double minPingIn, double maxPingIn, int minSigIn, double powIn, float minVolIn, float maxVolIn, float minPitchIn, float maxPitchIn, SoundEvent negSoundIn, SoundEvent pingSoundIn, boolean detectsCorpsesIn, boolean detectsTameIn, int durabilityIn, Rarity rarityIn, Item repairItemIn, int seekerTypeIn) {
-        super(new Properties()
-                .stacksTo(1)
-                .tab(IceAndFire.TAB_ITEMS)
-                .durability(durabilityIn)
-                .rarity(rarityIn)
-        );
-        opDist = opDistIn;
-        maxDist = maxDistIn;
-        minPing = minPingIn;
-        maxPing = maxPingIn;
-        minSig = minSigIn;
-        pow = powIn;
-        minVol = minVolIn;
-        maxVol = maxVolIn;
-        minPitch = minPitchIn;
-        maxPitch = maxPitchIn;
-        negSound = negSoundIn;
-        pingSound = pingSoundIn;
-        detectsCorpses = detectsCorpsesIn;
-        detectsTame = detectsTameIn;
-//        durability = durabilityIn;
-//        rarity = rarityIn;
-        repairItem = repairItemIn;
-        seekerType = seekerTypeIn;
     }
 
 
     //Repairing
     @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return repair.getItem() == repairItem;
+        return repair.getItem() == Items.NETHERITE_INGOT;
     }
 
 
@@ -107,17 +70,10 @@ public class TestDragonseekerGeneric extends Item {
 
             double rand = random.nextDouble();
             if (rand <= chance) {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), pingSound, SoundCategory.MASTER, vol, maxPitch);
-//                String s = "PING";
-//                ITextComponent text = new StringTextComponent(s);
-//                player.sendMessage(text, player.getUUID());
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_HARP, SoundCategory.MASTER, vol, 0.8F);
             } else {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), negSound, SoundCategory.MASTER, minVol, minPitch);
-//                String s = "PONG";
-//                ITextComponent text = new StringTextComponent(s);
-//                player.sendMessage(text, player.getUUID());
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_BASS, SoundCategory.MASTER, 0.05F, 0.5F);
             }
-
             return ActionResult.success(itemstack);
         }
         return ActionResult.fail(itemstack);
@@ -135,13 +91,11 @@ public class TestDragonseekerGeneric extends Item {
         List<EntityDragonBase> listOfTargets = world.getNearbyEntities(EntityDragonBase.class,pred,player,box);
 
         float min = 0;
-        EntityDragonBase closest = null;
         for (EntityDragonBase target : listOfTargets) {
             if ((detectsCorpses || !target.isModelDead()) && (detectsTame || !target.isTame())) {
                 float distance = target.distanceTo(player);
                 if ((min == 0) || distance < min) {
                     min = distance;
-                    closest = target;
 //                    String s = "Found dragon, updating minimum distance";
 //                    ITextComponent text = new StringTextComponent(s);
 //                    player.sendMessage(text, player.getUUID());
@@ -150,27 +104,17 @@ public class TestDragonseekerGeneric extends Item {
 //                    ITextComponent text = new StringTextComponent(s);
 //                    player.sendMessage(text, player.getUUID());
                 }
-            } else if (!(detectsCorpses || target.isAlive())) {
-                String s = "Found corpse, ignoring";
-                ITextComponent text = new StringTextComponent(s);
-                player.sendMessage(text, player.getUUID());
+            } else if (!(detectsCorpses || !target.isModelDead())) {
+//                String s = "Found corpse, ignoring";
+//                ITextComponent text = new StringTextComponent(s);
+//                player.sendMessage(text, player.getUUID());
             } else if (!(detectsTame || !target.isTame())) {
-                String s = "Found tamed dragon, ignoring";
-                ITextComponent text = new StringTextComponent(s);
-                player.sendMessage(text, player.getUUID());
+//                String s = "Found tamed dragon, ignoring";
+//                ITextComponent text = new StringTextComponent(s);
+//                player.sendMessage(text, player.getUUID());
             }
         }
-        if (seekerType == 4) {
-            String s = "";
-            if (closest != null) {
-                s = Math.round(min) + ", x=" + (int) closest.getX() + ", y="+ (int) closest.getY() + ", z=" + (int) closest.getZ();
-            } else {
-                s = "No dragon found";
-            }
-            ITextComponent text = new StringTextComponent(s);
-            player.sendMessage(text,player.getUUID());
-        }
-
+        
         return min;
     }
 
@@ -193,7 +137,7 @@ public class TestDragonseekerGeneric extends Item {
         } else if ((distance > maxDist) || (distance == 0)) {
             vol = minVol;
         } else {
-            vol = minVol + Math.pow(((maxDist-distance)/(maxDist-minSig)),pow)*(maxVol-minVol);
+            vol = minVol + ((maxDist-distance)/(maxDist-minSig))*(maxVol-minVol);
         }
         return vol;
     }

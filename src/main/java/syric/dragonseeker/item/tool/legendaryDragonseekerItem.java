@@ -3,12 +3,11 @@ package syric.dragonseeker.item.tool;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 
-public class TestDragonseekerSpecific3 extends TestDragonseekerGeneric {
+public class legendaryDragonseekerItem extends dragonseekerGeneric {
 
     //Defining statistics
     //Ping chance stats
@@ -30,13 +29,13 @@ public class TestDragonseekerSpecific3 extends TestDragonseekerGeneric {
     //Other stats
     private static final boolean detectsCorpses = false;
     private static final boolean detectsTame = false;
-    private static final int durability = 1024;
+    private static final int durability = 512;
     private static final Rarity rarity = Rarity.RARE;
-    private static final Item repairItem = Items.NETHERITE_INGOT;
+    private static final Item repairItem = IafItemRegistry.DRAGONSTEEL_FIRE_INGOT;
     private static final int seekerType = 3;
 
     //Constructor
-    public TestDragonseekerSpecific3() {
+    public legendaryDragonseekerItem() {
         super(opDist,maxDist,minPing,maxPing,minSig,pow,minVol,maxVol,minPitch,maxPitch,negSound,pingSound,detectsCorpses,detectsTame,durability,rarity,repairItem, seekerType);
     }
 

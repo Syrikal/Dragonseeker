@@ -1,16 +1,16 @@
 package syric.dragonseeker.item.tool;
 
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
+import com.github.alexthe666.iceandfire.entity.EntityFireDragon;
+import com.github.alexthe666.iceandfire.entity.EntityIceDragon;
+import com.github.alexthe666.iceandfire.entity.EntityLightningDragon;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.ShulkerEntity;
+import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -19,44 +19,43 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import com.github.alexthe666.iceandfire.entity.EntityFireDragon;
-import com.github.alexthe666.iceandfire.entity.EntityIceDragon;
-import com.github.alexthe666.iceandfire.entity.EntityLightningDragon;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LegendaryDragonseekerItem extends Item {
+public class OldDragonseekerItem extends Item {
 
     //Defining statistics
-    private int opDist = 200;
-    private int maxDist = 300;
-    private int minSig = 75;
+    private int opDist = 50;
+    private int maxDist = 200;
+//    private int minSig = 10;
 
-    private double minPing = 0.05;
-    private double maxPing = 0.8;
-    private double minVol = 0.05;
-    private double maxVol = 0.5;
+    private double minPing = 0.15;
+    private double maxPing = 0.5;
+//    private double minVol = 0.05;
+//    private double maxVol = 0.05;
 //    private double minPitch;
 //    private double maxPitch;
 
-    private boolean detectsCorpses = false;
-    private boolean detectsTame = false;
+    private boolean detectsCorpses = true;
+    private boolean detectsTame = true;
+//    private int durability;
+//    private Rarity rarity;
 
     //Constructor
-    public LegendaryDragonseekerItem() {
+    public OldDragonseekerItem() {
         super(new Properties()
                 .stacksTo(1)
-                .durability(1000)
+                .durability(200)
                 .tab(ItemGroup.TAB_TOOLS)
-                .rarity(Rarity.RARE)
+                .rarity(Rarity.UNCOMMON)
         );
     }
 
     //Repairing
     @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return ((repair.getItem() == IafItemRegistry.DRAGONSTEEL_FIRE_INGOT) || (repair.getItem() == IafItemRegistry.DRAGONSTEEL_ICE_INGOT) || (repair.getItem() == IafItemRegistry.DRAGONSTEEL_LIGHTNING_INGOT));
+        return repair.getItem() == Items.NETHERITE_INGOT;
     }
 
     //Using the Item
@@ -68,17 +67,16 @@ public class LegendaryDragonseekerItem extends Item {
 
             double distance = getDistance(world, player);
             double chance = getPingChance(distance);
-            float vol = (float) getPingVolume(distance);
+            float vol = 0.05F;
 
 //            printDistance(distance, world, player);
 
             double rand = random.nextDouble();
             if (rand <= chance) {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, vol, 0.8F);
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_BASS, SoundCategory.MASTER, vol, 0.8F);
             } else {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_BASS, SoundCategory.MASTER, 0.05F, 0.5F);
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_BASS, SoundCategory.MASTER, vol, 0.5F);
             }
-
             return ActionResult.success(itemstack);
         }
         return ActionResult.fail(itemstack);
@@ -119,7 +117,6 @@ public class LegendaryDragonseekerItem extends Item {
 //                player.sendMessage(text, player.getUUID());
             }
         }
-
         return min;
     }
 
@@ -135,18 +132,6 @@ public class LegendaryDragonseekerItem extends Item {
         return chance;
     }
 
-    private double getPingVolume(double distance) {
-        double vol;
-        if (distance < minSig && distance != 0) {
-            vol = maxVol;
-        } else if ((distance > maxDist) || (distance == 0)) {
-            vol = minVol;
-        } else {
-            vol = minVol + ((maxDist-distance)/(maxDist-minSig))*(maxVol-minVol);
-        }
-        return vol;
-    }
-
     private void printDistance(double distance, World world, PlayerEntity player) {
         if (!world.isClientSide) {
             int distancenew = (int) Math.round(distance);
@@ -156,4 +141,15 @@ public class LegendaryDragonseekerItem extends Item {
         }
     }
 
+//    private double getPingVolume(double distance) {
+//        double vol;
+//        if (distance < minSig) {
+//            vol = maxVol;
+//        } else if ((distance > maxDist) || (distance == 0)) {
+//            vol = minVol;
+//        } else {
+//            vol = minVol + ((maxDist-distance)/(maxDist-minSig))*(maxVol-minVol);
+//        }
+//        return vol;
+//    }
 }

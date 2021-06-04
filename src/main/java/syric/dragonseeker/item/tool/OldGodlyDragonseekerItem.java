@@ -1,16 +1,15 @@
 package syric.dragonseeker.item.tool;
 
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
-import com.github.alexthe666.iceandfire.entity.EntityFireDragon;
-import com.github.alexthe666.iceandfire.entity.EntityIceDragon;
-import com.github.alexthe666.iceandfire.entity.EntityLightningDragon;
-import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.ShulkerEntity;
 import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -20,42 +19,32 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class DragonseekerItem extends Item {
+public class OldGodlyDragonseekerItem extends Item {
 
     //Defining statistics
-    private int opDist = 50;
-    private int maxDist = 200;
-//    private int minSig = 10;
+    private int opDist = 300;
+    private int maxDist = 300;
+    private int minSig = 0;
 
-    private double minPing = 0.15;
-    private double maxPing = 0.5;
-//    private double minVol = 0.05;
-//    private double maxVol = 0.05;
+    private double minPing = 0;
+    private double maxPing = 1;
+    private double minVol = 0.05;
+    private double maxVol = 1;
 //    private double minPitch;
 //    private double maxPitch;
 
-    private boolean detectsCorpses = true;
-    private boolean detectsTame = true;
-//    private int durability;
-//    private Rarity rarity;
+    private boolean detectsCorpses = false;
+    private boolean detectsTame = false;
 
     //Constructor
-    public DragonseekerItem() {
+    public OldGodlyDragonseekerItem() {
         super(new Properties()
                 .stacksTo(1)
-                .durability(200)
                 .tab(ItemGroup.TAB_TOOLS)
-                .rarity(Rarity.UNCOMMON)
+                .rarity(Rarity.EPIC)
         );
-    }
-
-    //Repairing
-    @Override
-    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return repair.getItem() == Items.NETHERITE_INGOT;
     }
 
     //Using the Item
@@ -63,20 +52,17 @@ public class DragonseekerItem extends Item {
     public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (!world.isClientSide) {
-            itemstack.hurtAndBreak(1, player, (entity) -> player.broadcastBreakEvent(player.getUsedItemHand()));
-
             double distance = getDistance(world, player);
             double chance = getPingChance(distance);
-            float vol = 0.05F;
-
-//            printDistance(distance, world, player);
+            float vol = (float) getPingVolume(distance);
 
             double rand = random.nextDouble();
             if (rand <= chance) {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_BASS, SoundCategory.MASTER, vol, 0.8F);
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, vol, 1F);
             } else {
                 world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_BASS, SoundCategory.MASTER, vol, 0.5F);
             }
+
             return ActionResult.success(itemstack);
         }
         return ActionResult.fail(itemstack);
@@ -88,17 +74,19 @@ public class DragonseekerItem extends Item {
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();
-        AxisAlignedBB box = new AxisAlignedBB(x-300,0,z-300,x+300,y+200,z+300);
+        AxisAlignedBB box = new AxisAlignedBB(x-500,y-500,z-500,x+500,y+500,z+500);
         EntityPredicate pred = new EntityPredicate();
 //        List<LivingEntity> listOfTargets = world.getNearbyEntities(ShulkerEntity.class,pred,player,box);
         List<EntityDragonBase> listOfTargets = world.getNearbyEntities(EntityDragonBase.class,pred,player,box);
 
         float min = 0;
+        EntityDragonBase closest = null;
         for (EntityDragonBase target : listOfTargets) {
             if ((detectsCorpses || !target.isModelDead()) && (detectsTame || !target.isTame())) {
                 float distance = target.distanceTo(player);
                 if ((min == 0) || distance < min) {
                     min = distance;
+                    closest = target;
 //                    String s = "Found dragon, updating minimum distance";
 //                    ITextComponent text = new StringTextComponent(s);
 //                    player.sendMessage(text, player.getUUID());
@@ -117,39 +105,38 @@ public class DragonseekerItem extends Item {
 //                player.sendMessage(text, player.getUUID());
             }
         }
+
+        String s = "";
+        if (closest != null) {
+            s = Math.round(min) + ", x=" + (int) closest.getX() + ", y="+ (int) closest.getY() + ", z=" + (int) closest.getZ();
+        } else {
+            s = "No dragon found";
+        }
+        ITextComponent text = new StringTextComponent(s);
+        player.sendMessage(text,player.getUUID());
         return min;
     }
 
     private double getPingChance(double distance) {
-        double chance;
+        double chance = 0;
         if (distance < opDist && distance != 0) {
             chance = maxPing;
         } else if ((distance > maxDist) || (distance == 0)) {
             chance = minPing;
-        } else {
-            chance = minPing + ((maxDist-distance)/(maxDist-opDist))*(maxPing-minPing);
         }
         return chance;
     }
 
-    private void printDistance(double distance, World world, PlayerEntity player) {
-        if (!world.isClientSide) {
-            int distancenew = (int) Math.round(distance);
-            String s = String.valueOf(distancenew);
-            ITextComponent text = new StringTextComponent(s);
-            player.sendMessage(text, player.getUUID());
+    private double getPingVolume(double distance) {
+        double vol;
+        if (distance < minSig && distance != 0) {
+            vol = maxVol;
+        } else if ((distance > maxDist) || (distance == 0)) {
+            vol = minVol;
+        } else {
+            vol = minVol + ((maxDist - distance) / (maxDist - minSig)) * (maxVol - minVol);
         }
+        return vol;
     }
 
-//    private double getPingVolume(double distance) {
-//        double vol;
-//        if (distance < minSig) {
-//            vol = maxVol;
-//        } else if ((distance > maxDist) || (distance == 0)) {
-//            vol = minVol;
-//        } else {
-//            vol = minVol + ((maxDist-distance)/(maxDist-minSig))*(maxVol-minVol);
-//        }
-//        return vol;
-//    }
 }

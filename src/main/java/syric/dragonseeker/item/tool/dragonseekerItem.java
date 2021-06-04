@@ -1,22 +1,11 @@
 package syric.dragonseeker.item.tool;
 
-import com.github.alexthe666.iceandfire.IceAndFire;
-import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
 
-import java.util.List;
-
-public class TestDragonseekerSpecific extends TestDragonseekerGeneric {
+public class dragonseekerItem extends dragonseekerGeneric {
 
     //Defining statistics
     //Ping chance stats
@@ -44,8 +33,8 @@ public class TestDragonseekerSpecific extends TestDragonseekerGeneric {
     private static final int seekerType = 1;
 
     //Constructor
-    public TestDragonseekerSpecific() {
-        super(opDist,maxDist,minPing,maxPing,minSig,pow,minVol,maxVol,minPitch,maxPitch,negSound,pingSound,detectsCorpses,detectsTame,durability,rarity,repairItem, seekerType);
+    public dragonseekerItem() {
+        super(opDist,maxDist,minPing,maxPing,minSig,pow,minVol,maxVol,minPitch,maxPitch,negSound,pingSound,detectsCorpses,detectsTame,durability,rarity,repairItem,seekerType);
     }
 
 }
