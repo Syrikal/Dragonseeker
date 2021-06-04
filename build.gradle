@@ -130,8 +130,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.0'
 
     compile fg.deobf("curse.maven:citadel-331936:3198842")
-//    compile fg.deobf("curse.maven:ice-and-fire-dragons-264231:3217622")
-    compile fg.deobf("curse.maven:wyrmroost-340333:3173775")
+    compile fg.deobf("curse.maven:ice-and-fire-dragons-264231:3217622")
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"

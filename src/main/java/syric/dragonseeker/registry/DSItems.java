@@ -18,9 +18,13 @@ public class DSItems {
     }
 
     // register item
-    public static final RegistryObject<Item> DINGSTICK = ITEMS.register("dingstick", DingstickItem::new);
+//    public static final RegistryObject<Item> DINGSTICK = ITEMS.register("dingstick", DingstickItem::new);
     public static final RegistryObject<Item> DRAGONSEEKER = ITEMS.register("dragonseeker", DragonseekerItem::new);
     public static final RegistryObject<Item> EPICDRAGONSEEKER = ITEMS.register("epic_dragonseeker", EpicDragonseekerItem::new);
     public static final RegistryObject<Item> LEGENDARYDRAGONSEEKER = ITEMS.register("legendary_dragonseeker", LegendaryDragonseekerItem::new);
     public static final RegistryObject<Item> GODLYDRAGONSEEKER = ITEMS.register("godly_dragonseeker", GodlyDragonseekerItem::new);
+
+    public static final RegistryObject<Item> GENERICDRAGONSEEKER = ITEMS.register("generic_dragonseeker", TestDragonseekerGeneric::new);
+    public static final RegistryObject<Item> SPECIFICDRAGONSEEKER = ITEMS.register("specific_dragonseeker", TestDragonseekerSpecific::new);
+    public static final RegistryObject<Item> SPECIFICDRAGONSEEKER2 = ITEMS.register("specific_dragonseeker_2", TestDragonseekerSpecific2::new);
 }

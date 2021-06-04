@@ -1,62 +1,92 @@
 package syric.dragonseeker.item.tool;
 
+import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
-import com.github.alexthe666.iceandfire.entity.EntityFireDragon;
-import com.github.alexthe666.iceandfire.entity.EntityIceDragon;
-import com.github.alexthe666.iceandfire.entity.EntityLightningDragon;
-import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.ShulkerEntity;
-import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class DragonseekerItem extends Item {
+public class TestDragonseekerGeneric extends Item {
 
     //Defining statistics
-    private int opDist = 50;
-    private int maxDist = 200;
-//    private int minSig = 10;
+    //Ping chance stats
+    private int opDist;
+    private int maxDist;
+    private double minPing;
+    private double maxPing;
 
-    private double minPing = 0.15;
-    private double maxPing = 0.5;
-//    private double minVol = 0.05;
-//    private double maxVol = 0.05;
-//    private double minPitch;
-//    private double maxPitch;
+    //Ping characteristic stats
+    private int minSig;
+    private float minVol;
+    private float maxVol;
+    private float minPitch;
+    private float maxPitch;
+    private SoundEvent negSound;
+    private SoundEvent pingSound;
 
-    private boolean detectsCorpses = true;
-    private boolean detectsTame = true;
+    //Other stats
+    private boolean detectsCorpses;
+    private boolean detectsTame;
 //    private int durability;
 //    private Rarity rarity;
+    private Item repairItem;
 
     //Constructor
-    public DragonseekerItem() {
+    public TestDragonseekerGeneric() {
         super(new Properties()
                 .stacksTo(1)
-                .durability(200)
-                .tab(ItemGroup.TAB_TOOLS)
-                .rarity(Rarity.UNCOMMON)
+                .tab(IceAndFire.TAB_ITEMS)
         );
     }
+
+//    public TestDragonseekerGeneric(int durability, Rarity rarity) {
+//        super(new Properties()
+//                .stacksTo(1)
+//                .tab(IceAndFire.TAB_ITEMS)
+//                .durability(durability)
+//                .rarity(rarity)
+//        );
+//    }
+
+    public TestDragonseekerGeneric(int opDistIn, int maxDistIn, double minPingIn, double maxPingIn, int minSigIn, float minVolIn, float maxVolIn, float minPitchIn, float maxPitchIn, SoundEvent negSoundIn, SoundEvent pingSoundIn, boolean detectsCorpsesIn, boolean detectsTameIn, int durabilityIn, Rarity rarityIn, Item repairItemIn) {
+        super(new Properties()
+                .stacksTo(1)
+                .tab(IceAndFire.TAB_ITEMS)
+                .durability(durabilityIn)
+                .rarity(rarityIn)
+        );
+        opDist = opDistIn;
+        maxDist = maxDistIn;
+        minPing = minPingIn;
+        maxPing = maxPingIn;
+        minSig = minSigIn;
+        minVol = minVolIn;
+        maxVol = maxVolIn;
+        minPitch = minPitchIn;
+        maxPitch = maxPitchIn;
+        negSound = negSoundIn;
+        pingSound = pingSoundIn;
+        detectsCorpses = detectsCorpsesIn;
+        detectsTame = detectsTameIn;
+//        durability = durabilityIn;
+//        rarity = rarityIn;
+        repairItem = repairItemIn;
+    }
+
 
     //Repairing
     @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return repair.getItem() == Items.NETHERITE_INGOT;
+        return repair.getItem() == repairItem;
     }
+
 
     //Using the Item
     @Override
@@ -67,16 +97,23 @@ public class DragonseekerItem extends Item {
 
             double distance = getDistance(world, player);
             double chance = getPingChance(distance);
-            float vol = 0.05F;
+            float vol = (float) getPingVolume(distance);
 
 //            printDistance(distance, world, player);
 
             double rand = random.nextDouble();
             if (rand <= chance) {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_BASS, SoundCategory.MASTER, vol, 0.8F);
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), pingSound, SoundCategory.MASTER, vol, maxPitch);
+                String s = "PING";
+                ITextComponent text = new StringTextComponent(s);
+                player.sendMessage(text, player.getUUID());
             } else {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_BASS, SoundCategory.MASTER, vol, 0.5F);
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), negSound, SoundCategory.MASTER, minVol, minPitch);
+                String s = "PONG";
+                ITextComponent text = new StringTextComponent(s);
+                player.sendMessage(text, player.getUUID());
             }
+
             return ActionResult.success(itemstack);
         }
         return ActionResult.fail(itemstack);
@@ -107,16 +144,17 @@ public class DragonseekerItem extends Item {
 //                    ITextComponent text = new StringTextComponent(s);
 //                    player.sendMessage(text, player.getUUID());
                 }
-            } else if (!(detectsCorpses || !target.isModelDead())) {
-//                String s = "Found corpse, ignoring";
-//                ITextComponent text = new StringTextComponent(s);
-//                player.sendMessage(text, player.getUUID());
+            } else if (!(detectsCorpses || target.isAlive())) {
+                String s = "Found corpse, ignoring";
+                ITextComponent text = new StringTextComponent(s);
+                player.sendMessage(text, player.getUUID());
             } else if (!(detectsTame || !target.isTame())) {
-//                String s = "Found tamed dragon, ignoring";
-//                ITextComponent text = new StringTextComponent(s);
-//                player.sendMessage(text, player.getUUID());
+                String s = "Found tamed dragon, ignoring";
+                ITextComponent text = new StringTextComponent(s);
+                player.sendMessage(text, player.getUUID());
             }
         }
+
         return min;
     }
 
@@ -132,6 +170,18 @@ public class DragonseekerItem extends Item {
         return chance;
     }
 
+    private double getPingVolume(double distance) {
+        double vol;
+        if (distance < minSig && distance != 0) {
+            vol = maxVol;
+        } else if ((distance > maxDist) || (distance == 0)) {
+            vol = minVol;
+        } else {
+            vol = minVol + ((maxDist-distance)/(maxDist-minSig))*(maxVol-minVol);
+        }
+        return vol;
+    }
+
     private void printDistance(double distance, World world, PlayerEntity player) {
         if (!world.isClientSide) {
             int distancenew = (int) Math.round(distance);
@@ -141,15 +191,4 @@ public class DragonseekerItem extends Item {
         }
     }
 
-//    private double getPingVolume(double distance) {
-//        double vol;
-//        if (distance < minSig) {
-//            vol = maxVol;
-//        } else if ((distance > maxDist) || (distance == 0)) {
-//            vol = minVol;
-//        } else {
-//            vol = minVol + ((maxDist-distance)/(maxDist-minSig))*(maxVol-minVol);
-//        }
-//        return vol;
-//    }
 }

@@ -3,5 +3,9 @@
   "item.dragonseeker.dragonseeker": "Dragonseeker",
   "item.dragonseeker.epic_dragonseeker": "Epic Dragonseeker",
   "item.dragonseeker.legendary_dragonseeker": "Legendary Dragonseeker",
-  "item.dragonseeker.godly_dragonseeker": "Godly Dragonseeker"
+  "item.dragonseeker.godly_dragonseeker": "Godly Dragonseeker",
+
+  "item.dragonseeker.generic_dragonseeker": "Generic Dragonseeker",
+  "item.dragonseeker.specific_dragonseeker": "Specific Dragonseeker",
+  "item.dragonseeker.specific_dragonseeker_2": "Specific Dragonseeker 2"
 }
