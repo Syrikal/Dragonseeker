@@ -27,4 +27,7 @@ public class DSItems {
     public static final RegistryObject<Item> GENERICDRAGONSEEKER = ITEMS.register("generic_dragonseeker", TestDragonseekerGeneric::new);
     public static final RegistryObject<Item> SPECIFICDRAGONSEEKER = ITEMS.register("specific_dragonseeker", TestDragonseekerSpecific::new);
     public static final RegistryObject<Item> SPECIFICDRAGONSEEKER2 = ITEMS.register("specific_dragonseeker_2", TestDragonseekerSpecific2::new);
+    public static final RegistryObject<Item> SPECIFICDRAGONSEEKER3 = ITEMS.register("specific_dragonseeker_3", TestDragonseekerSpecific3::new);
+    public static final RegistryObject<Item> SPECIFICDRAGONSEEKER4 = ITEMS.register("specific_dragonseeker_4", TestDragonseekerSpecific4::new);
+
 }

@@ -24,6 +24,7 @@ public class TestDragonseekerGeneric extends Item {
 
     //Ping characteristic stats
     private int minSig;
+    private double pow;
     private float minVol;
     private float maxVol;
     private float minPitch;
@@ -37,6 +38,7 @@ public class TestDragonseekerGeneric extends Item {
 //    private int durability;
 //    private Rarity rarity;
     private Item repairItem;
+    private int seekerType;
 
     //Constructor
     public TestDragonseekerGeneric() {
@@ -55,7 +57,7 @@ public class TestDragonseekerGeneric extends Item {
 //        );
 //    }
 
-    public TestDragonseekerGeneric(int opDistIn, int maxDistIn, double minPingIn, double maxPingIn, int minSigIn, float minVolIn, float maxVolIn, float minPitchIn, float maxPitchIn, SoundEvent negSoundIn, SoundEvent pingSoundIn, boolean detectsCorpsesIn, boolean detectsTameIn, int durabilityIn, Rarity rarityIn, Item repairItemIn) {
+    public TestDragonseekerGeneric(int opDistIn, int maxDistIn, double minPingIn, double maxPingIn, int minSigIn, double powIn, float minVolIn, float maxVolIn, float minPitchIn, float maxPitchIn, SoundEvent negSoundIn, SoundEvent pingSoundIn, boolean detectsCorpsesIn, boolean detectsTameIn, int durabilityIn, Rarity rarityIn, Item repairItemIn, int seekerTypeIn) {
         super(new Properties()
                 .stacksTo(1)
                 .tab(IceAndFire.TAB_ITEMS)
@@ -67,6 +69,7 @@ public class TestDragonseekerGeneric extends Item {
         minPing = minPingIn;
         maxPing = maxPingIn;
         minSig = minSigIn;
+        pow = powIn;
         minVol = minVolIn;
         maxVol = maxVolIn;
         minPitch = minPitchIn;
@@ -78,6 +81,7 @@ public class TestDragonseekerGeneric extends Item {
 //        durability = durabilityIn;
 //        rarity = rarityIn;
         repairItem = repairItemIn;
+        seekerType = seekerTypeIn;
     }
 
 
@@ -104,14 +108,14 @@ public class TestDragonseekerGeneric extends Item {
             double rand = random.nextDouble();
             if (rand <= chance) {
                 world.playSound(null, player.getX(), player.getY(), player.getZ(), pingSound, SoundCategory.MASTER, vol, maxPitch);
-                String s = "PING";
-                ITextComponent text = new StringTextComponent(s);
-                player.sendMessage(text, player.getUUID());
+//                String s = "PING";
+//                ITextComponent text = new StringTextComponent(s);
+//                player.sendMessage(text, player.getUUID());
             } else {
                 world.playSound(null, player.getX(), player.getY(), player.getZ(), negSound, SoundCategory.MASTER, minVol, minPitch);
-                String s = "PONG";
-                ITextComponent text = new StringTextComponent(s);
-                player.sendMessage(text, player.getUUID());
+//                String s = "PONG";
+//                ITextComponent text = new StringTextComponent(s);
+//                player.sendMessage(text, player.getUUID());
             }
 
             return ActionResult.success(itemstack);
@@ -131,11 +135,13 @@ public class TestDragonseekerGeneric extends Item {
         List<EntityDragonBase> listOfTargets = world.getNearbyEntities(EntityDragonBase.class,pred,player,box);
 
         float min = 0;
+        EntityDragonBase closest = null;
         for (EntityDragonBase target : listOfTargets) {
             if ((detectsCorpses || !target.isModelDead()) && (detectsTame || !target.isTame())) {
                 float distance = target.distanceTo(player);
                 if ((min == 0) || distance < min) {
                     min = distance;
+                    closest = target;
 //                    String s = "Found dragon, updating minimum distance";
 //                    ITextComponent text = new StringTextComponent(s);
 //                    player.sendMessage(text, player.getUUID());
@@ -153,6 +159,16 @@ public class TestDragonseekerGeneric extends Item {
                 ITextComponent text = new StringTextComponent(s);
                 player.sendMessage(text, player.getUUID());
             }
+        }
+        if (seekerType == 4) {
+            String s = "";
+            if (closest != null) {
+                s = Math.round(min) + ", x=" + (int) closest.getX() + ", y="+ (int) closest.getY() + ", z=" + (int) closest.getZ();
+            } else {
+                s = "No dragon found";
+            }
+            ITextComponent text = new StringTextComponent(s);
+            player.sendMessage(text,player.getUUID());
         }
 
         return min;
@@ -177,7 +193,7 @@ public class TestDragonseekerGeneric extends Item {
         } else if ((distance > maxDist) || (distance == 0)) {
             vol = minVol;
         } else {
-            vol = minVol + ((maxDist-distance)/(maxDist-minSig))*(maxVol-minVol);
+            vol = minVol + Math.pow(((maxDist-distance)/(maxDist-minSig)),pow)*(maxVol-minVol);
         }
         return vol;
     }
