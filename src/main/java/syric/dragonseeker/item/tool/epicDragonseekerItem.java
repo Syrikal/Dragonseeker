@@ -16,7 +16,7 @@ public class epicDragonseekerItem extends dragonseekerGeneric {
     private static final double maxPing = 0.75;
 
     //Ping characteristic stats
-    private static final int minSig = 100;
+    private static final int minSig = 125;
     private static final double pow = 1.5;
     private static final float minVol = 0.05F;
     private static final float maxVol = 0.4F;
