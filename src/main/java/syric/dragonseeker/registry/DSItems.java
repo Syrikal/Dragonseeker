@@ -1,6 +1,7 @@
 package syric.dragonseeker.registry;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import syric.dragonseeker.Dragonseeker;
 import syric.dragonseeker.item.tool.*;
@@ -22,6 +23,5 @@ public class DSItems {
     public static final RegistryObject<Item> EPICDRAGONSEEKER = ITEMS.register("epic_dragonseeker", epicDragonseekerItem::new);
     public static final RegistryObject<Item> LEGENDARYDRAGONSEEKER = ITEMS.register("legendary_dragonseeker", legendaryDragonseekerItem::new);
     public static final RegistryObject<Item> GODLYDRAGONSEEKER = ITEMS.register("godly_dragonseeker", godlyDragonseekerItem::new);
-
 
 }
