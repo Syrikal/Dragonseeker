@@ -1,9 +1,12 @@
 package syric.dragonseeker.item.tool;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
 import net.minecraft.util.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import syric.dragonseeker.DragonseekerConfig;
 
 public class dragonseekerItem extends dragonseekerGeneric {
@@ -28,7 +31,8 @@ public class dragonseekerItem extends dragonseekerGeneric {
     //Other stats
     private static final boolean detectsCorpses = DragonseekerConfig.COMMON.basic_detectsCorpses.get();
     private static final boolean detectsTame = DragonseekerConfig.COMMON.basic_detectsTame.get();
-    private static final int durability = DragonseekerConfig.COMMON.basic_durability.get();
+//    private static int durability = DragonseekerConfig.COMMON.basic_durability.get();
+    private static final int durability = 128;
     private static final Rarity rarity = Rarity.UNCOMMON;
     private static final Item repairItem = Items.NETHERITE_INGOT;
     private static final int seekerType = 1;

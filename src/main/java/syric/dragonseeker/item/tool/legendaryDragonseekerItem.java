@@ -30,7 +30,8 @@ public class legendaryDragonseekerItem extends dragonseekerGeneric {
     //Other stats
     private static final boolean detectsCorpses = DragonseekerConfig.COMMON.legendary_detectsCorpses.get();
     private static final boolean detectsTame = DragonseekerConfig.COMMON.legendary_detectsTame.get();
-    private static final int durability = DragonseekerConfig.COMMON.legendary_durability.get();
+//    private static final int durability = DragonseekerConfig.COMMON.legendary_durability.get();
+    private static final int durability = 512;
     private static final Rarity rarity = Rarity.RARE;
     private static final Item repairItem = IafItemRegistry.DRAGONSTEEL_FIRE_INGOT;
     private static final int seekerType = 3;
