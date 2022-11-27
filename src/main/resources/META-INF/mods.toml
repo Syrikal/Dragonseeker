@@ -27,7 +27,7 @@ displayName="Dragonseeker" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="" #optional
+logoFile="logo.png" #optional
 # A text field displayed in the mod UI
 credits="Ice & Fire was written by Alex-the-666. The textures for the items are based on Ice & Fire's Dragon Command Staff." #optional
 # A text field displayed in the mod UI
