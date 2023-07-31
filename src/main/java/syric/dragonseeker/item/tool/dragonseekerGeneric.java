@@ -2,18 +2,21 @@ package syric.dragonseeker.item.tool;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.event.world.NoteBlockEvent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import syric.dragonseeker.DragonseekerConfig;
 
 import java.util.List;
+import java.util.Random;
 
 public class dragonseekerGeneric extends Item {
 
@@ -31,16 +34,16 @@ public class dragonseekerGeneric extends Item {
     private float maxVol;
     private float minPitch;
     private float maxPitch;
-    private SoundEvent negSound;
-    private SoundEvent pingSound;
+    private final SoundEvent negSound;
+    private final SoundEvent pingSound;
 
     //Other stats
     private boolean detectsCorpses;
     private boolean detectsTame;
 //    private int durability;
 //    private Rarity rarity;
-    private Item repairItem;
-    private int seekerType;
+    private final Item repairItem;
+    private final int seekerType;
     private boolean isDefault;
 
     //Constructor
@@ -89,7 +92,7 @@ public class dragonseekerGeneric extends Item {
 
     //Using the Item
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (!world.isClientSide) {
 
@@ -125,36 +128,37 @@ public class dragonseekerGeneric extends Item {
 
 //            printDistance(distance, world, player);
 
+            Random random = new Random();
+
             double rand = random.nextDouble();
             if (rand <= chance) {
                 //Positive result
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), pingSound, SoundCategory.MASTER, vol, maxPitch);
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), pingSound, SoundSource.MASTER, vol, maxPitch);
 //                String s = "PING";
 //                ITextComponent text = new StringTextComponent(s);
 //                player.sendMessage(text, player.getUUID());
             } else {
                 //Negative result
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), negSound, SoundCategory.MASTER, minVol, minPitch);
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), negSound, SoundSource.MASTER, minVol, minPitch);
 //                String s = "PONG";
 //                ITextComponent text = new StringTextComponent(s);
 //                player.sendMessage(text, player.getUUID());
             }
 
-            return ActionResult.success(itemstack);
+            return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide());
         }
-        return ActionResult.fail(itemstack);
+        return InteractionResultHolder.fail(itemstack);
     }
 
 
     //methods
-    private double getDistance(World world, PlayerEntity player) {
+    private double getDistance(Level world, Player player) {
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();
-        AxisAlignedBB box = new AxisAlignedBB(x-300,0,z-300,x+300,y+200,z+300);
-        EntityPredicate pred = new EntityPredicate();
+        AABB box = new AABB(x-300,0,z-300,x+300,y+200,z+300);
 //        List<LivingEntity> listOfTargets = world.getNearbyEntities(ShulkerEntity.class,pred,player,box);
-        List<EntityDragonBase> listOfTargets = world.getNearbyEntities(EntityDragonBase.class,pred,player,box);
+        List<EntityDragonBase> listOfTargets = world.getEntitiesOfClass(EntityDragonBase.class, box);
 
         float min = 0;
         EntityDragonBase closest = null;
@@ -189,8 +193,7 @@ public class dragonseekerGeneric extends Item {
             } else {
                 s = "No dragon found";
             }
-            ITextComponent text = new StringTextComponent(s);
-            player.sendMessage(text,player.getUUID());
+            player.displayClientMessage(new TextComponent(s), false);
         }
 
         return min;
@@ -220,12 +223,11 @@ public class dragonseekerGeneric extends Item {
         return vol;
     }
 
-    private void printDistance(double distance, World world, PlayerEntity player) {
+    private void printDistance(double distance, Level world, Player player) {
         if (!world.isClientSide) {
             int distancenew = (int) Math.round(distance);
             String s = String.valueOf(distancenew);
-            ITextComponent text = new StringTextComponent(s);
-            player.sendMessage(text, player.getUUID());
+            player.displayClientMessage(new TextComponent(s), false);
         }
     }
 

@@ -1,10 +1,10 @@
 package syric.dragonseeker.item.tool;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 import syric.dragonseeker.DragonseekerConfig;
 
 public class epicDragonseekerItem extends dragonseekerGeneric {

@@ -1,13 +1,15 @@
 package syric.dragonseeker.registry;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import syric.dragonseeker.Dragonseeker;
-import syric.dragonseeker.item.tool.*;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+import syric.dragonseeker.Dragonseeker;
+import syric.dragonseeker.item.tool.dragonseekerItem;
+import syric.dragonseeker.item.tool.epicDragonseekerItem;
+import syric.dragonseeker.item.tool.godlyDragonseekerItem;
+import syric.dragonseeker.item.tool.legendaryDragonseekerItem;
 
 public class DSItems {
     // create DeferredRegister object

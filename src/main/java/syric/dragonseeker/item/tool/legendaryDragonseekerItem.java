@@ -1,11 +1,11 @@
 package syric.dragonseeker.item.tool;
 
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import syric.dragonseeker.DragonseekerConfig;
 
 public class legendaryDragonseekerItem extends dragonseekerGeneric {
@@ -33,7 +33,7 @@ public class legendaryDragonseekerItem extends dragonseekerGeneric {
 //    private static final int durability = DragonseekerConfig.COMMON.legendary_durability.get();
     private static final int durability = 512;
     private static final Rarity rarity = Rarity.RARE;
-    private static final Item repairItem = IafItemRegistry.DRAGONSTEEL_FIRE_INGOT;
+    private static final Item repairItem = IafItemRegistry.DRAGONSTEEL_FIRE_INGOT.get();
     private static final int seekerType = 3;
 
     //Constructor
@@ -44,7 +44,7 @@ public class legendaryDragonseekerItem extends dragonseekerGeneric {
     //Repairing
     @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return ((repair.getItem() == IafItemRegistry.DRAGONSTEEL_FIRE_INGOT) || (repair.getItem() == IafItemRegistry.DRAGONSTEEL_ICE_INGOT) || (repair.getItem() == IafItemRegistry.DRAGONSTEEL_LIGHTNING_INGOT));
+        return ((repair.getItem() == IafItemRegistry.DRAGONSTEEL_FIRE_INGOT.get()) || (repair.getItem() == IafItemRegistry.DRAGONSTEEL_ICE_INGOT.get()) || (repair.getItem() == IafItemRegistry.DRAGONSTEEL_LIGHTNING_INGOT.get()));
     }
 
 }
