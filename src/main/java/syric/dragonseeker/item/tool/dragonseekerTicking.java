@@ -1,6 +1,7 @@
 package syric.dragonseeker.item.tool;
 
 //import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
+import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,9 +23,9 @@ public class dragonseekerTicking extends Item {
     }
 
     public void inventoryTick(ItemStack stack, World world, Entity holdingEntity, int slot, boolean isSelected) {
-        if (!world.isClientSide) {
+        if (!world.isRemote) {
             //If held in either hand:
-            if (isSelected || (holdingEntity instanceof PlayerEntity && ((PlayerEntity) holdingEntity).getOffhandItem() == stack)) {
+            if (isSelected || (holdingEntity instanceof PlayerEntity && ((PlayerEntity) holdingEntity).getHeldItemOffhand() == stack)) {
                 CompoundNBT nbt = stack.getOrCreateTag();
                 int cycleTicks = nbt.getInt("Ticks");
                 if (cycleTicks > 0) {
@@ -67,14 +68,14 @@ public class dragonseekerTicking extends Item {
 
     //Calculates and sums the intensities of all nearby dragons
     private double getIntensity(World world, Entity player) {
-        AxisAlignedBB box = new AxisAlignedBB(player.getX() - 300, -40, player.getZ() - 300, player.getX() + 300, 120, player.getZ() + 300);
+        AxisAlignedBB box = new AxisAlignedBB(player.getPosX() - 300, -40, player.getPosZ() - 300, player.getPosX() + 300, 120, player.getPosZ() + 300);
 //        List<EntityDragonBase> dragons = world.getEntitiesOfClass(EntityDragonBase.class, box);
-        List<CreeperEntity> dragons = world.getEntitiesOfClass(CreeperEntity.class, box);
+        List<EntityDragonBase> dragons = world.getEntitiesWithinAABB(EntityDragonBase.class, box);
 
         int total = 0;
 
-        for (CreeperEntity dragon : dragons) {
-            float distance = dragon.distanceTo(player);
+        for (EntityDragonBase dragon : dragons) {
+            float distance = dragon.getDistance(player);
 //            int age = dragon.getDragonStage();
             int age = 4;
 

@@ -26,6 +26,6 @@ public class DSItems {
 //    public static final RegistryObject<Item> LEGENDARYDRAGONSEEKER = ITEMS.register("legendary_dragonseeker", legendaryDragonseekerItem::new);
 //    public static final RegistryObject<Item> GODLYDRAGONSEEKER = ITEMS.register("godly_dragonseeker", godlyDragonseekerItem::new);
     public static final RegistryObject<Item> DRAGONSEEKER_TICKING = ITEMS.register("dragonseeker_ticking",
-            () -> new dragonseekerTicking(new Item.Properties().stacksTo(1).durability(500).rarity(Rarity.COMMON)));
+            () -> new dragonseekerTicking(new Item.Properties().maxStackSize(1).maxDamage(500).rarity(Rarity.COMMON)));
 
 }
