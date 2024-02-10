@@ -23,7 +23,7 @@ public class legendaryDragonseekerItem extends dragonseekerGeneric {
 //    private static final Double maxVol = DragonseekerConfig.COMMON.legendary_maxVol.get();
 //    private static final Double minPitch = DragonseekerConfig.COMMON.legendary_minPitch.get();
 //    private static final Double maxPitch = DragonseekerConfig.COMMON.legendary_maxPitch.get();
-    private static final SoundEvent negSound = SoundEvents.NOTE_BLOCK_BASS;
+    private static final SoundEvent negSound = SoundEvents.NOTE_BLOCK_BASS.get();
     private static final SoundEvent pingSound = SoundEvents.EXPERIENCE_ORB_PICKUP;
 
     //Other stats

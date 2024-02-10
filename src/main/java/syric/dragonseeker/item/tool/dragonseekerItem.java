@@ -22,8 +22,8 @@ public class dragonseekerItem extends dragonseekerGeneric {
 //    private static final Double maxVol = DragonseekerConfig.COMMON.basic_maxVol.get();
 //    private static final Double minPitch = DragonseekerConfig.COMMON.basic_minPitch.get();
 //    private static final Double maxPitch = DragonseekerConfig.COMMON.basic_maxPitch.get();
-    private static final SoundEvent negSound = SoundEvents.NOTE_BLOCK_BASS;
-    private static final SoundEvent pingSound = SoundEvents.NOTE_BLOCK_BASS;
+    private static final SoundEvent negSound = SoundEvents.NOTE_BLOCK_BASS.get();
+    private static final SoundEvent pingSound = SoundEvents.NOTE_BLOCK_BASS.get();
 
     //Other stats
 //    private static final boolean detectsCorpses = DragonseekerConfig.COMMON.basic_detectsCorpses.get();

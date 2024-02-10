@@ -57,7 +57,6 @@ public class dragonseekerGeneric extends Item {
     public dragonseekerGeneric(int opDistIn, int maxDistIn, double minPingIn, double maxPingIn, int minSigIn, double powIn, double minVolIn, double maxVolIn, double minPitchIn, double maxPitchIn, SoundEvent negSoundIn, SoundEvent pingSoundIn, boolean detectsCorpsesIn, boolean detectsTameIn, int durabilityIn, Rarity rarityIn, Item repairItemIn, int seekerTypeIn) {
         super(new Properties()
                 .stacksTo(1)
-                .tab(IceAndFire.TAB_ITEMS)
                 .durability(durabilityIn)
                 .rarity(rarityIn)
         );

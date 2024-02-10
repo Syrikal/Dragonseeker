@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "dragonseeker:items/godly_dragonseeker"
+    "layer0": "dragonseeker:item/godly_dragonseeker"
   },
   "display": {
     "thirdperson_righthand": {

@@ -22,8 +22,8 @@ public class epicDragonseekerItem extends dragonseekerGeneric {
 //    private static final Double maxVol = DragonseekerConfig.COMMON.epic_maxVol.get();
 //    private static final Double minPitch = DragonseekerConfig.COMMON.epic_minPitch.get();
 //    private static final Double maxPitch = DragonseekerConfig.COMMON.epic_maxPitch.get();
-    private static final SoundEvent negSound = SoundEvents.NOTE_BLOCK_BASS;
-    private static final SoundEvent pingSound = SoundEvents.NOTE_BLOCK_HARP;
+    private static final SoundEvent negSound = SoundEvents.NOTE_BLOCK_BASS.get();
+    private static final SoundEvent pingSound = SoundEvents.NOTE_BLOCK_HARP.get();
 
     //Other stats
 //    private static final boolean detectsCorpses = DragonseekerConfig.COMMON.epic_detectsCorpses.get();

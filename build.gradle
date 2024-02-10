@@ -103,19 +103,14 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     //Ice and Fire (requires Citadel)
-    implementation fg.deobf("curse.maven:ice-and-fire-dragons-264231:5037952")
+    implementation fg.deobf("curse.maven:ice-and-fire-dragons-264231:5037783")
 
     //Libraries and Dependencies
-    implementation fg.deobf("curse.maven:citadel-331936:4556677") //For Ice & Fire
+    implementation fg.deobf("curse.maven:citadel-331936:4848887") //For Ice & Fire
 
     //JEI etc
-    implementation fg.deobf("curse.maven:jei-238222:4712866")
-    implementation fg.deobf("curse.maven:configured-457570:4462837")
-    implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:4862430")
-
-    //Optimization
-//    implementation fg.deobf("curse.maven:rubidium-574856:4763255")
-//    implementation fg.deobf("curse.maven:oculus-581495:4763262")
+    implementation fg.deobf("curse.maven:jei-238222:4712868")
+    implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:5057220")
 
     //Mixins
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
