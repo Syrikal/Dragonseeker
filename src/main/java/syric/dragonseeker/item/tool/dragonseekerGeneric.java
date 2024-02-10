@@ -2,9 +2,10 @@ package syric.dragonseeker.item.tool;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +17,6 @@ import net.minecraft.world.phys.AABB;
 import syric.dragonseeker.DragonseekerConfig;
 
 import java.util.List;
-import java.util.Random;
 
 public class dragonseekerGeneric extends Item {
 
@@ -94,33 +94,36 @@ public class dragonseekerGeneric extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
+
+//        String s1 = "Checking for entities";
+//        player.displayClientMessage(Component.literal(s1), false);
+//
+//        AABB box2 = new AABB(player.getX() - 3, player.getY() - 2, player.getZ() - 3, player.getX() + 3, player.getY() + 2, player.getZ() + 3);
+//        List<LivingEntity> allEntities = world.getNearbyEntities(LivingEntity.class, TargetingConditions.DEFAULT, player, box2);
+//        for (LivingEntity entity : allEntities) {
+//            String s2 = String.format("Entity found: %s", entity.getType());
+//            player.displayClientMessage(Component.literal(s2), false);
+//        }
+
         if (!world.isClientSide) {
 
 //            String s = "Before update, item OpDist is: " + opDist;
-//            ITextComponent text = new StringTextComponent(s);
-//            player.sendMessage(text, player.getUUID());
+//            player.displayClientMessage(Component.literal(s), false);
 
             if (isDefault) {
 //                String a = "Item stats default, updating";
-//                ITextComponent texta = new StringTextComponent(a);
-//                player.sendMessage(texta, player.getUUID());
+//                player.displayClientMessage(Component.literal(a), false);
                 importConfig();
                 isDefault = false;
             } else {
 //                String b = "Item stats not default, not updating";
-//                ITextComponent textb = new StringTextComponent(b);
-//                player.sendMessage(textb, player.getUUID());
+//                player.displayClientMessage(Component.literal(b), false);
             }
 
 //            s = "After update, item OpDist is: " + opDist;
-//            ITextComponent text2 = new StringTextComponent(s);
-//            player.sendMessage(text2, player.getUUID());
+//            player.displayClientMessage(Component.literal(s), false);
 
             itemstack.hurtAndBreak(1, player, (entity) -> player.broadcastBreakEvent(player.getUsedItemHand()));
-
-//            String s = "basic durability config = " + DragonseekerConfig.COMMON.basic_durability.get();
-//            ITextComponent text = new StringTextComponent(s);
-//            player.sendMessage(text, player.getUUID());
 
             double distance = getDistance(world, player);
             double chance = getPingChance(distance);
@@ -128,7 +131,7 @@ public class dragonseekerGeneric extends Item {
 
 //            printDistance(distance, world, player);
 
-            Random random = new Random();
+            RandomSource random = world.random;
 
             double rand = random.nextDouble();
             if (rand <= chance) {
@@ -156,9 +159,17 @@ public class dragonseekerGeneric extends Item {
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();
-        AABB box = new AABB(x-300,0,z-300,x+300,y+200,z+300);
+        AABB box = new AABB(x-300,-64,z-300,x+300,y+100,z+300);
+//        AABB box = new AABB(x - 10, y - 10, z - 10, x + 10, y + 10, z + 10);
 //        List<LivingEntity> listOfTargets = world.getNearbyEntities(ShulkerEntity.class,pred,player,box);
         List<EntityDragonBase> listOfTargets = world.getEntitiesOfClass(EntityDragonBase.class, box);
+//        String s = "Identified " + listOfTargets.size() + " dragons.";
+//        player.displayClientMessage(Component.literal(s), false);
+//
+//        List<LivingEntity> allEntities = world.getNearbyEntities(LivingEntity.class, TargetingConditions.DEFAULT, player, box);
+//        s = "Identified " + allEntities.size() + " total entities.";
+//        player.displayClientMessage(Component.literal(s), false);
+
 
         float min = 0;
         EntityDragonBase closest = null;
@@ -168,32 +179,23 @@ public class dragonseekerGeneric extends Item {
                 if ((min == 0) || distance < min) {
                     min = distance;
                     closest = target;
-//                    String s = "Found dragon, updating minimum distance";
-//                    ITextComponent text = new StringTextComponent(s);
-//                    player.sendMessage(text, player.getUUID());
+//                    s = "Found dragon, updating minimum distance";
+//                    player.displayClientMessage(Component.literal(s), false);
                 } else if (distance >= min) {
-//                    String s = "Found further dragon, ignoring";
-//                    ITextComponent text = new StringTextComponent(s);
-//                    player.sendMessage(text, player.getUUID());
+//                    s = "Found further dragon, ignoring";
+//                    player.displayClientMessage(Component.literal(s), false);
                 }
-            } else if (!(detectsCorpses || !target.isModelDead())) {
-//                String s = "Found corpse, ignoring";
-//                ITextComponent text = new StringTextComponent(s);
-//                player.sendMessage(text, player.getUUID());
-            } else if (!(detectsTame || !target.isTame())) {
-//                String s = "Found tamed dragon, ignoring";
-//                ITextComponent text = new StringTextComponent(s);
-//                player.sendMessage(text, player.getUUID());
+            } else if (!detectsCorpses && target.isModelDead()) {
+//                s = "Found corpse, ignoring";
+//                player.displayClientMessage(Component.literal(s), false);
+            } else if (!detectsTame && target.isTame()) {
+//                s = "Found tamed dragon, ignoring";
+//                player.displayClientMessage(Component.literal(s), false);
             }
         }
         if (seekerType == 4) {
-            String s = "";
-            if (closest != null) {
-                s = Math.round(min) + ", x=" + (int) closest.getX() + ", y="+ (int) closest.getY() + ", z=" + (int) closest.getZ();
-            } else {
-                s = "No dragon found";
-            }
-            player.displayClientMessage(new TextComponent(s), false);
+            String s = closest != null ? Math.round(min) + ", x=" + (int) closest.getX() + ", y=" + (int) closest.getY() + ", z=" + (int) closest.getZ() : "No dragon found";
+            player.displayClientMessage(Component.literal(s), false);
         }
 
         return min;
@@ -227,7 +229,7 @@ public class dragonseekerGeneric extends Item {
         if (!world.isClientSide) {
             int distancenew = (int) Math.round(distance);
             String s = String.valueOf(distancenew);
-            player.displayClientMessage(new TextComponent(s), false);
+            player.displayClientMessage(Component.literal(s), false);
         }
     }
 
@@ -307,8 +309,6 @@ public class dragonseekerGeneric extends Item {
             detectsCorpses = DragonseekerConfig.COMMON.mythic_detectsCorpses.get();
             detectsTame = DragonseekerConfig.COMMON.mythic_detectsTame.get();
             isDefault = false;
-        } else {
-            return;
         }
     }
 
